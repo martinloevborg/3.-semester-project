@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: template
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: gr1-website
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gr1-website
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gr1-website
+  template:
+    metadata:
+      labels:
+        app: gr1-website
+    spec:
+      containers:
+      - name: website
+        image: IMAGE_IS_INSERTED_USING_GITLAB
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+            limits:
+              cpu: 100m
+              memory: 200Mi
+            requests:
+              cpu: 70m
+              memory: 150Mi
+      imagePullSecrets:
+      - name: sdugitlab
